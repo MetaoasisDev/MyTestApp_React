@@ -19,10 +19,10 @@ export const App = () => {
   
 
   const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
-    loaderUrl: "https://d3c9jx2zokz1rn.cloudfront.net/web-build/banana-v3/Build.loader.js",
-    dataUrl: "https://d3c9jx2zokz1rn.cloudfront.net/web-build/banana-v3/Build.data",
-    frameworkUrl: "https://d3c9jx2zokz1rn.cloudfront.net/web-build/banana-v3/Build.framework.js",
-    codeUrl: "https://d3c9jx2zokz1rn.cloudfront.net/web-build/banana-v3/Build.wasm",
+    loaderUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.loader.js",
+    dataUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.data",
+    frameworkUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.framework.js",
+    codeUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.wasm",
   });
 
   const TestUnityMessage = () => {
