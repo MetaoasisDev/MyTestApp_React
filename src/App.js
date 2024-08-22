@@ -4,16 +4,19 @@ import "./App.css";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { View, Button, Vibration } from 'react-native';
+import { TonConnectUIProvider, useTonWallet } from '@tonconnect/ui-react';
+import { useTonAddress } from '@tonconnect/ui-react';
 
 
 
-const App = () => {
+
+export const App = () => {
   
   window.Telegram.WebApp.expand();
 
   const root = document.querySelector("#root");
 
-
+  
 
   const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
     loaderUrl: "https://d3c9jx2zokz1rn.cloudfront.net/web-build/banana-v3/Build.loader.js",
@@ -43,7 +46,7 @@ const App = () => {
     window.Telegram.WebApp.openLink("https://discord.com/invite/metaoasisvr");
   };
   const OpenUrl5 = () => {
-    window.Telegram.WebApp.openLink("https://www.meoasis.com/");
+    var wallet =  useTonWallet();
   };
 
 
@@ -90,6 +93,10 @@ const App = () => {
 
   <div className="App">
 
+    <TonConnectUIProvider manifestUrl="https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json">
+        { /* Your app */ }
+    </TonConnectUIProvider>
+
       <Unity
       devicePixelRatio={2}  
       style={{
@@ -103,7 +110,6 @@ const App = () => {
   </div>
 
   ) ;
-  
 };
 
 export default App; 
