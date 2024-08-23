@@ -19,13 +19,13 @@ export const App = () => {
  
 
   const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
-    loaderUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version39/Build.loader.js",
-    dataUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version39/Build.data",
-    frameworkUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version39/Build.framework.js",
-    codeUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version39/Build.wasm",
-    index: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version39/index.js",
-    manifest: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version39/manifest.webmanifest",
-    ServiceWorker: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version39/ServiceWorker.js",
+    loaderUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.loader.js",
+    dataUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.data",
+    frameworkUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.framework.js",
+    codeUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.wasm",
+    index: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/index.js",
+    manifest: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/manifest.webmanifest",
+    ServiceWorker: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/ServiceWorker.js",
   });
 
   const TestUnityMessage = () => {
