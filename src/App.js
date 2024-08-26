@@ -51,15 +51,19 @@ export const App = () => {
     GetWalletAddress();
   };
 
-  const unsubscribe = connectorUi.onStatusChange(
-    walletAndwalletInfo => {
-      alert(`Wallet Connected!\n- wallet: ${connectorUi.wallet}\n- account: ${connectorUi.account}\n- isConnected: ${connectorUi.connected}`);
-    }
-  );
-
   async function GetWalletAddress() {
     await connectorUi.openModal();
-    
+    connectorUi.closeModal();
+
+    const currentState = connectorUi.modalState;
+
+    const unsubscribe = connectorUi.onModalStateChange(
+      state => {
+        alert(`[Modal (${currentState})]\nWallet Connected!\n- isConnected: ${connectorUi.connected}\n- wallet: ${connectorUi.wallet.provider}\n- account: ${connectorUi.account.address}\n- ${connectorUi.account.publicKey}`);
+      }
+    );
+
+    unsubscribe();
   }
 
   const handleCopyClipBoard = (text_s) => {
