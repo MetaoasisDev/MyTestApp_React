@@ -4,10 +4,12 @@ import "./App.css";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { View, Button, Vibration } from 'react-native';
-import TonConnect from '@tonconnect/sdk';
+import { TonConnect} from '@tonconnect/sdk';
+import { TonConnectUI } from '@tonconnect/ui-react';
 
-const connector = new TonConnect({
-  manifestUrl: 'https://myApp.com/assets/tonconnect-manifest.json'
+
+const connectorUi = new TonConnectUI({
+  manifestUrl: 'https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json'
 });
 
 export const App = () => {
@@ -45,10 +47,14 @@ export const App = () => {
   const OpenUrl4 = () => {
     window.Telegram.WebApp.openLink("https://discord.com/invite/metaoasisvr");
   };
-  const OpenUrl5 = () => {
-    
+   const OpenUrl5 = () => {
+    GetWalletAddress();
   };
 
+  async function GetWalletAddress() {
+    await connectorUi.openModal();
+    console.log( connectorUi.WalletInfo);
+  }
 
   const handleCopyClipBoard = (text_s) => {
     //   navigator.clipboard.writeText(text_s);
