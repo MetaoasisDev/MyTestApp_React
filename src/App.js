@@ -19,13 +19,10 @@ export const App = () => {
  
 
   const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
-    loaderUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.loader.js",
-    dataUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.data",
-    frameworkUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.framework.js",
-    codeUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/Build.wasm",
-    index: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/index.js",
-    manifest: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/manifest.webmanifest",
-    ServiceWorker: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version40/ServiceWorker.js",
+    loaderUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.loader.js",
+    dataUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.data",
+    frameworkUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.framework.js",
+    codeUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/Version37/Build.wasm",
   });
 
   const TestUnityMessage = () => {
@@ -49,6 +46,7 @@ export const App = () => {
     window.Telegram.WebApp.openLink("https://discord.com/invite/metaoasisvr");
   };
   const OpenUrl5 = () => {
+    
   };
 
 
