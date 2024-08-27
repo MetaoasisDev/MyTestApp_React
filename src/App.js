@@ -48,7 +48,7 @@ export const App = () => {
     window.Telegram.WebApp.openLink("https://discord.com/invite/metaoasisvr");
   };
    const OpenUrl5 = () => {
-    window.Telegram.WebApp.openInvoice(`https://api.telegram.org/6811131170:AAHllayoOosGJYdk2pl3DASXuk3Km-2Hl98/sendInvoice?chat_id=5876530353&title=test%20product&description=this%20is%20test&payload=&currency=XTR&prices=20`, (event) => {
+    window.Telegram.WebApp.openInvoice(`https://api.telegram.org/bot6811131170:AAHllayoOosGJYdk2pl3DASXuk3Km-2Hl98/sendInvoice?chat_id=5876530353&title=test%20product&description=this%20is%20test&payload=payload&provider_token=284685063:TEST:NWVhOTY4MGI4MmVh&currency=USD&prices=%5B%7B%22amount%22%3A110%2C%22label%22%3A%22Test%22%7D%5D`, (event) => {
       console.log("telegram: " + event);
     });
   };
