@@ -48,7 +48,9 @@ export const App = () => {
     window.Telegram.WebApp.openLink("https://discord.com/invite/metaoasisvr");
   };
    const OpenUrl5 = () => {
-    GetWalletAddress();
+    window.Telegram.WebApp.openInvoice(`https://api.telegram.org/6811131170:AAHllayoOosGJYdk2pl3DASXuk3Km-2Hl98/sendInvoice?chat_id=5876530353&title=test%20product&description=this%20is%20test&payload=&currency=XTR&prices=20`, (event) => {
+      console.log("telegram: " + event);
+    });
   };
 
   async function GetWalletAddress() {
