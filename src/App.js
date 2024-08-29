@@ -20,7 +20,7 @@ export const App = () => {
   const root = document.querySelector("#root");
 
   const TestBot1_LabeledPrices = [{"label":"Test", "amount":110}];
-  const TestBot1_Token = "6811131170:AAHllayoOosGJYdk2pl3DASXuk3Km-2Hl98";
+  const TestBot1_Token = "5000902684:AAGJqOsbMv7F5IPVexyVAAjVcMwV1y2yeTA";
   //const TestBot1_ProviderToken = "284685063:TEST:MDM1MGZhYWVmODhl";
   //const TestBot1_Currency = "USD"
   const TestBot1_Product_Title = "테스트 결제 아이템 이름";
