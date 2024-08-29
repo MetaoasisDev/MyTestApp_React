@@ -66,7 +66,7 @@ export const App = () => {
       });
 
       window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-        console.log("결제 완료됨: " + event);
+        console.log("결제 완료됨: " + JSON.stringify(event));
       });
     })
     .catch(error => {
