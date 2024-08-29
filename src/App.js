@@ -25,7 +25,7 @@ export const App = () => {
   const TestBot1_Currency = "USD"
   const TestBot1_Product_Title = "테스트 결제 아이템 이름";
   const TestBot1_Product_Description = "테스트 결제용 아이템 설명입니다. 결제 PLZ";
-  const TestBot1_Payload = "이거 되면 화장실 갔다 와야지";
+  const TestBot1_Payload = "두번째 테스트입니다.";
   const TestBot1_PaymentUrl = `https://api.telegram.org/bot${TestBot1_Token}/createInvoiceLink?title=${TestBot1_Product_Title}&description=${TestBot1_Product_Description}&payload=${TestBot1_Payload}&provider_token=${TestBot1_ProviderToken}&currency=${TestBot1_Currency}&prices=${JSON.stringify(TestBot1_LabeledPrices)}`;
  
 
@@ -62,14 +62,19 @@ export const App = () => {
     .then(data => {
       const result = data.result;
       window.Telegram.WebApp.openInvoice(result, (event) => {
-
         console.log("결제 완료 이벤트: " + event);
+      });
+
+      window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+        console.log("결제 완료됨: " + event);
       });
     })
     .catch(error => {
       console.log("에러 발생!");
     });
   };
+
+  
 
   async function GetWalletAddress() {
     await connectorUi.openModal();
