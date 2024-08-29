@@ -19,6 +19,14 @@ export const App = () => {
 
   const root = document.querySelector("#root");
 
+  const TestBot1_LabeledPrices = [{"label":"Test", "amount":110}];
+  const TestBot1_Token = "6811131170:AAHllayoOosGJYdk2pl3DASXuk3Km-2Hl98";
+  const TestBot1_ProviderToken = "284685063:TEST:MDM1MGZhYWVmODhl";
+  const TestBot1_Currency = "USD"
+  const TestBot1_Product_Title = "테스트 결제 아이템 이름";
+  const TestBot1_Product_Description = "테스트 결제용 아이템 설명입니다. 결제 PLZ";
+  const TestBot1_Payload = "이거 되면 화장실 갔다 와야지";
+  const TestBot1_PaymentUrl = `https://api.telegram.org/bot${TestBot1_Token}/createInvoiceLink?title=${TestBot1_Product_Title}&description=${TestBot1_Product_Description}&payload=${TestBot1_Payload}&provider_token=${TestBot1_ProviderToken}&currency=${TestBot1_Currency}&prices=${JSON.stringify(TestBot1_LabeledPrices)}`;
  
 
   const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
@@ -49,12 +57,13 @@ export const App = () => {
     window.Telegram.WebApp.openLink("https://discord.com/invite/metaoasisvr");
   };
    const OpenUrl5 = () => {
-    fetch('https://api.telegram.org/bot6811131170:AAHllayoOosGJYdk2pl3DASXuk3Km-2Hl98/createInvoiceLink?title=Test&description=Test%20Product&payload=payload&provider_token=284685063:TEST:NWVhOTY4MGI4MmVh&currency=USD&prices=%5B%7B%22amount%22%3A110%2C%22label%22%3A%22Test%22%7D%5D')
+    fetch(TestBot1_PaymentUrl)
     .then(response => response.json())
     .then(data => {
       const result = data.result;
       window.Telegram.WebApp.openInvoice(result, (event) => {
-        console.log("telegram: " + event);
+
+        console.log("결제 완료 이벤트: " + event);
       });
     })
     .catch(error => {
