@@ -21,12 +21,12 @@ export const App = () => {
 
   const TestBot1_LabeledPrices = [{"label":"Test", "amount":110}];
   const TestBot1_Token = "6811131170:AAHllayoOosGJYdk2pl3DASXuk3Km-2Hl98";
-  const TestBot1_ProviderToken = "284685063:TEST:MDM1MGZhYWVmODhl";
-  const TestBot1_Currency = "USD"
+  //const TestBot1_ProviderToken = "284685063:TEST:MDM1MGZhYWVmODhl";
+  //const TestBot1_Currency = "USD"
   const TestBot1_Product_Title = "테스트 결제 아이템 이름";
   const TestBot1_Product_Description = "테스트 결제용 아이템 설명입니다. 결제 PLZ";
-  const TestBot1_Payload = "두번째 테스트입니다.";
-  const TestBot1_PaymentUrl = `https://api.telegram.org/bot${TestBot1_Token}/createInvoiceLink?title=${TestBot1_Product_Title}&description=${TestBot1_Product_Description}&payload=${TestBot1_Payload}&provider_token=${TestBot1_ProviderToken}&currency=${TestBot1_Currency}&prices=${JSON.stringify(TestBot1_LabeledPrices)}`;
+  const TestBot1_Payload = "세번째 테스트입니다.";
+  const TestBot1_PaymentUrl = `https://api.telegram.org/bot${TestBot1_Token}/test/createInvoiceLink?title=${TestBot1_Product_Title}&description=${TestBot1_Product_Description}&payload=${TestBot1_Payload}&currency=XTR&prices=${JSON.stringify(TestBot1_LabeledPrices)}`;
  
 
   const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
