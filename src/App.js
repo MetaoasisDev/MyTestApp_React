@@ -18,15 +18,6 @@ export const App = () => {
   window.Telegram.WebApp.expand();
 
   const root = document.querySelector("#root");
-
-  const TestBot1_LabeledPrices = [{"label":"Test", "amount":110}];
-  const TestBot1_Token = "5000902684:AAGJqOsbMv7F5IPVexyVAAjVcMwV1y2yeTA";
-  //const TestBot1_ProviderToken = "284685063:TEST:MDM1MGZhYWVmODhl";
-  //const TestBot1_Currency = "USD"
-  const TestBot1_Product_Title = "테스트 결제 아이템 이름";
-  const TestBot1_Product_Description = "테스트 결제용 아이템 설명입니다. 결제 PLZ";
-  const TestBot1_Payload = "세번째 테스트입니다.";
-  const TestBot1_PaymentUrl = `https://api.telegram.org/bot${TestBot1_Token}/test/createInvoiceLink?title=${TestBot1_Product_Title}&description=${TestBot1_Product_Description}&payload=${TestBot1_Payload}&currency=XTR&prices=${JSON.stringify(TestBot1_LabeledPrices)}`;
  
 
   const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
@@ -57,24 +48,64 @@ export const App = () => {
     window.Telegram.WebApp.openLink("https://discord.com/invite/metaoasisvr");
   };
    const OpenUrl5 = () => {
-    fetch(TestBot1_PaymentUrl)
+    generatePayment("5000902684:AAGJqOsbMv7F5IPVexyVAAjVcMwV1y2yeTA", true, "테스트 결제용 아이템 이름", "테스트 결제용 아이템 설명입니다.", 10, `{"buyItemId":1}`);
+  };
+
+  /**
+   * Generate 'Telegram Stars' invoice link using Telegram API and send and receive invoice data to Telegram API Server
+   * @param {string} token Telegram Bot Token
+   * @param {boolean} isTest Is Telegram Test Server?
+   * @param {string} productTitle Item Title
+   * @param {string} productDescription Item Description
+   * @param {number} price  Item Price (Currency: XTR(Telegram Stars))
+   * @param {JSON} payload Item payload data (send to Telegram Bot with payload data)
+   */
+  function generatePayment(token, isTest, productTitle, productDescription, price, payload) {
+    var urlParams = {
+      "title": productTitle,
+      "description": productDescription,
+      "price": price,
+      "payload": payload
+    };
+
+    window.Telegram.WebApp.invokeCustomMethod('generatePaymentUrl', JSON.stringify(urlParams), event => {
+      console.log("봇 콜백 이벤트 실행됨: " + JSON.stringify(event));
+    });
+
+    /* var formatUrl = `https://api.telegram.org/bot${token}`;
+
+    if (isTest) {
+        formatUrl = formatUrl + "/test";
+    }
+
+    formatUrl = formatUrl + "/createInvoiceLink"
+    formatUrl = formatUrl + `?title=${productTitle}`;
+    formatUrl = formatUrl + `&description=${productDescription}`;
+    formatUrl = formatUrl + `&payload=${payload}`;
+    formatUrl = formatUrl + `&currency=XTR`;
+
+    const labeledPrices = [{"label":productTitle, "amount": price}];
+    formatUrl = formatUrl + `&prices=${JSON.stringify(labeledPrices)}`;
+
+    fetch(formatUrl)
     .then(response => response.json())
     .then(data => {
       const result = data.result;
       window.Telegram.WebApp.openInvoice(result, (event) => {
-        console.log("결제 완료 이벤트: " + event);
+        if (event.state !== 'paid') {
+          // TODO 결제가 완료되지 않았을 때 이벤트
+        }
       });
 
       window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-        console.log("결제 완료됨: " + JSON.stringify(event));
+        // TODO 결제가 완료되었을 때 이벤트
+        //console.log("event: " + JSON.stringify(event));
       });
     })
     .catch(error => {
-      console.log("에러 발생!");
-    });
-  };
-
-  
+      console.log(`An error occurred while purchasing in-game items: ${JSON.stringify(error)}`);
+    }); */
+  }
 
   async function GetWalletAddress() {
     await connectorUi.openModal();
