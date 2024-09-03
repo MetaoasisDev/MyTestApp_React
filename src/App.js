@@ -82,17 +82,17 @@ const App = () => {
       }
     });
 
-    window.Telegram.WebApp.onInvoiceClosed('invoiceClosed', event => {
-      if (event.state === 'paid') {
-        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-      }
-    });
-
-    /* window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+    /* window.Telegram.WebApp.onInvoiceClosed('invoiceClosed', event => {
       if (event.state === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
       }
     }); */
+
+    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+      if (event.state === 'paid') {
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
+    });
 
   }
   
