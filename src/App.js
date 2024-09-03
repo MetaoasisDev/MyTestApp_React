@@ -89,7 +89,7 @@ const App = () => {
     }); */
 
     window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-      if (event.state === 'paid') {
+      if (event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
       }
     });
