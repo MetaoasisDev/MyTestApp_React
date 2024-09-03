@@ -82,9 +82,6 @@ const App = () => {
       if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
       }
-      else if (event.state === 'paid') {
-        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-      }
     });
 
     /* window.Telegram.WebApp.onInvoiceClosed('invoiceClosed', event => {
@@ -92,6 +89,15 @@ const App = () => {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
       }
     }); */
+
+    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+      alert("너 왜 여러번");
+
+      if (event.status === 'paid') {
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+        window.Telegram.WebApp.offEvent('invoiceClosed');
+      }
+    });
   }
   
   const WalletConnect = () => {
