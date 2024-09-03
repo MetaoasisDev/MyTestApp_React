@@ -77,9 +77,8 @@ const App = () => {
 
   function OpenInvoiceAndPayment(url, itemNum) {
     window.Telegram.WebApp.openInvoice(url, event => {
-      if (event.state !== 'paid') {
+      if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
-
       }
     });
 
