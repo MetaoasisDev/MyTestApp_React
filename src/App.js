@@ -82,9 +82,18 @@ const App = () => {
       }
     });
 
-    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-      sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+    window.Telegram.WebApp.onInvoiceClosed('invoiceClosed', event => {
+      if (event.state === 'paid') {
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
     });
+
+    /* window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+      if (event.state === 'paid') {
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
+    }); */
+
   }
   
   const WalletConnect = () => {
