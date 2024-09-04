@@ -95,14 +95,16 @@ const App = () => {
     }); */
 
     window.Telegram.WebApp.receiveEvent('invoice_closed', eventData => {
+      alert("이벤트 수신 중!");
       var event = JSON.parse(eventData);
+
+      if (event.status === 'paid') {
+        alert('결제 성공');
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
 
       if (event.status === 'cancelled' || event.status === 'failed') {
         alert("결제 실패 (사용자 취소 또는 결제 실패)");
-      }
-      else if (event.status === 'paid') {
-        alert('결제 성공');
-        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
       }
     });
   }
