@@ -76,6 +76,10 @@ const App = () => {
   };
 
   function OpenInvoiceAndPayment(url, itemNum) {
+    if (window.Telegram.WebApp === undefined) {
+      window.Telegram.WebApp = new window.Telegram.WebApp();
+    }
+
     window.Telegram.WebApp.openInvoice(url, event => {
       if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
@@ -85,14 +89,9 @@ const App = () => {
     window.Telegram.WebApp.onEvent('invoiceClosed', event => {
       if (event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+        window.Telegram.WebApp = undefined;
       }
-
-      window.Telegram.WebApp.offEvent('invoiceClosed', event);
     });
-  }
-
-  function onInvoiceClosedCallback(event, itemNum) {
-    
   }
   
   const WalletConnect = () => {
