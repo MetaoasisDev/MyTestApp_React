@@ -72,24 +72,29 @@ const App = () => {
   };
 
   const Shop_CoinParty =(str)=>{
-    OpenInvoiceAndPayment(str, 2);
-  };
-
-  function OpenInvoiceAndPayment(url, itemNum) {
-    var slug;
-
-    window.Telegram.WebApp.openInvoice(url, event => {
-      slug = event.slug;
-
+    window.Telegram.WebApp.openInvoice(str, event => {
       if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
       }
     });
 
     window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-      if (slug === event.slug && event.status === 'paid') {
+      if (event.status === 'paid') {
+        sendMessage('SendReactManager', 'ReciveShopItem', 2);
+      }
+    });
+  };
+
+  function OpenInvoiceAndPayment(url, itemNum) {
+    window.Telegram.WebApp.openInvoice(url, event => {
+      if (event.state === 'cancelled' || event.state === 'failed') {
+        sendMessage('SendReactManager', 'ReciveShopItem', -1);
+      }
+    });
+
+    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+      if (event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-        window.Telegram.WebApp.offEvent('invoiceClosed', this);
       }
     });
   }
