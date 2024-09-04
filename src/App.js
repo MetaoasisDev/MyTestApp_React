@@ -76,35 +76,20 @@ const App = () => {
   };
 
   function OpenInvoiceAndPayment(url, itemNum) {
+    var slug;
+
     window.Telegram.WebApp.openInvoice(url, event => {
-      /* if (event.state === 'cancelled' || event.state === 'failed') {
+      slug = event.slug;
+
+      if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
       }
-
-      if (event.state === 'paid') {
-        alert("결제 성공함");
-        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-      } */
     });
 
-    /* window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-      if (event.status === 'paid') {
+    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+      if (slug === event.slug && event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
         window.Telegram.WebApp.offEvent('invoiceClosed', this);
-      }
-    }); */
-
-    window.Telegram.WebApp.receiveEvent('invoice_closed', eventData => {
-      alert("이벤트 수신 중!");
-      var event = JSON.parse(eventData);
-
-      if (event.status === 'paid') {
-        alert('결제 성공');
-        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-      }
-
-      if (event.status === 'cancelled' || event.status === 'failed') {
-        alert("결제 실패 (사용자 취소 또는 결제 실패)");
       }
     });
   }
