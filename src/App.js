@@ -79,7 +79,7 @@ const App = () => {
   };
 
   function OpenInvoiceAndPayment(url, itemNum) {
-    if (window.Telegram.WebApp === undefined) {
+    if (window.Telegram.WebApp == undefined || window.Telegram.WebApp === undefined) {
       window.Telgram.WebApp = JSON.parse(webAppBackup);
       alert("Web app initalized");
     }
