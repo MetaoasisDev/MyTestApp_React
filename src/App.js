@@ -84,20 +84,15 @@ const App = () => {
       }
     });
 
-    /* window.Telegram.WebApp.onInvoiceClosed('invoiceClosed', event => {
-      if (event.state === 'paid') {
-        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-      }
-    }); */
-
     window.Telegram.WebApp.onEvent('invoiceClosed', event => {
       alert("너 왜 여러번");
 
       if (event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-        window.Telegram.WebApp = undefined;
       }
     });
+
+    window.Telegram.WepApp.offEvent('invoiceClosed');
   }
   
   const WalletConnect = () => {
