@@ -11,12 +11,9 @@ const connectorUi = new TonConnectUI({
   manifestUrl: 'https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json'
 });
 
-let webAppBackup = {};
-
 const App = () => {
   
   window.Telegram.WebApp.expand();
-  webAppBackup = JSON.stringify(window.Telegram.WebApp);
 
   const root = document.querySelector("#root");
 
@@ -80,18 +77,20 @@ const App = () => {
 
   function OpenInvoiceAndPayment(url, itemNum) {
     window.Telegram.WebApp.openInvoice(url, event => {
-      if (event.state === 'cancelled' || event.state === 'failed') {
+      if (event === 'cancelled' || event === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
       }
-    });
 
-    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-      if (event.status === 'paid') {
+      if (event === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-
-        window.Telegram.WebApp = JSON.parse(webAppBackup);
       }
     });
+
+    /*window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+      if (event.status === 'paid') {
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
+    });*/
   }
   
   const WalletConnect = () => {
