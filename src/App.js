@@ -80,14 +80,19 @@ const App = () => {
       if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
       }
+
+      if (event.state === 'paid') {
+        alert("결제 성공함");
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
     });
 
-    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+    /* window.Telegram.WebApp.onEvent('invoiceClosed', event => {
       if (event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
         window.Telegram.WebApp.offEvent('invoiceClosed', this);
       }
-    });
+    }); */
   }
   
   const WalletConnect = () => {
