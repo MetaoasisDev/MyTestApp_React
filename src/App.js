@@ -76,21 +76,23 @@ const App = () => {
   };
 
   function OpenInvoiceAndPayment(url, itemNum) {
-    window.Telegram.WepApp.offEvent('invoiceClosed', onInvoiceClosedCallback(itemNum));
-
     window.Telegram.WebApp.openInvoice(url, event => {
       if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
       }
     });
 
-    window.Telegram.WebApp.onEvent('invoiceClosed', onInvoiceClosedCallback(itemNum));
+    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
+      if (event.status === 'paid') {
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
+
+      window.Telegram.WebApp.offEvent('invoiceClosed', event);
+    });
   }
 
   function onInvoiceClosedCallback(event, itemNum) {
-    if (event.status === 'paid') {
-      sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-    }
+    
   }
   
   const WalletConnect = () => {
