@@ -11,9 +11,12 @@ const connectorUi = new TonConnectUI({
   manifestUrl: 'https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json'
 });
 
+let webAppBackup = {};
+
 const App = () => {
   
   window.Telegram.WebApp.expand();
+  webAppBackup = JSON.stringify(window.Telegram.WebApp);
 
   const root = document.querySelector("#root");
 
@@ -72,20 +75,15 @@ const App = () => {
   };
 
   const Shop_CoinParty =(str)=>{
-    window.Telegram.WebApp.openInvoice(str, event => {
-      if (event.state === 'cancelled' || event.state === 'failed') {
-        sendMessage('SendReactManager', 'ReciveShopItem', -1);
-      }
-    });
-
-    window.Telegram.WebApp.onEvent('invoiceClosed', event => {
-      if (event.status === 'paid') {
-        sendMessage('SendReactManager', 'ReciveShopItem', 2);
-      }
-    });
+    OpenInvoiceAndPayment(str, 2);
   };
 
   function OpenInvoiceAndPayment(url, itemNum) {
+    if (window.Telegram.WebApp === undefined) {
+      window.Telgram.WebApp = JSON.parse(webAppBackup);
+      alert("Web app initalized");
+    }
+
     window.Telegram.WebApp.openInvoice(url, event => {
       if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
@@ -95,6 +93,9 @@ const App = () => {
     window.Telegram.WebApp.onEvent('invoiceClosed', event => {
       if (event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+
+        window.Telegram.WebApp = undefined;
+        alert(window.Telegram.WebApp);
       }
     });
   }
