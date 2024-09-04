@@ -77,14 +77,14 @@ const App = () => {
 
   function OpenInvoiceAndPayment(url, itemNum) {
     window.Telegram.WebApp.openInvoice(url, event => {
-      if (event.state === 'cancelled' || event.state === 'failed') {
+      /* if (event.state === 'cancelled' || event.state === 'failed') {
         sendMessage('SendReactManager', 'ReciveShopItem', -1);
       }
 
       if (event.state === 'paid') {
         alert("결제 성공함");
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-      }
+      } */
     });
 
     /* window.Telegram.WebApp.onEvent('invoiceClosed', event => {
@@ -93,6 +93,18 @@ const App = () => {
         window.Telegram.WebApp.offEvent('invoiceClosed', this);
       }
     }); */
+
+    window.Telegram.WebApp.receiveEvent('invoice_closed', eventData => {
+      var event = JSON.parse(eventData);
+
+      if (event.status === 'cancelled' || event.status === 'failed') {
+        alert("결제 실패 (사용자 취소 또는 결제 실패)");
+      }
+      else if (event.status === 'paid') {
+        alert('결제 성공');
+        sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
+      }
+    });
   }
   
   const WalletConnect = () => {
