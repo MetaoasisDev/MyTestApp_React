@@ -85,11 +85,6 @@ const App = () => {
     window.Telegram.WebApp.onEvent('invoiceClosed', event => {
       if (event.status === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
-      }
-
-      if (window.Telegram.WebApp.eventHandlers['invoiceClosed'] !== undefined) {
-        alert("이벤트 있슈");
-
         window.Telegram.WebApp.offEvent('invoiceClosed', this);
       }
     });
