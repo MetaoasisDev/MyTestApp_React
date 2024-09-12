@@ -6,9 +6,9 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { View, Button, Vibration } from 'react-native';
 import { TonConnectUI } from '@tonconnect/ui-react';
 
-const isDev = true;
+const isDev = false;
 const liveVersion = "banana-v19";
-const devVersion = "banana-v19" /*"Payment2"*/;
+const devVersion = "Payment2";
 
 const liveUrl = "https://d3c9jx2zokz1rn.cloudfront.net/web-build";
 const devUrl = "https://lys-test.s3.ap-northeast-2.amazonaws.com";
