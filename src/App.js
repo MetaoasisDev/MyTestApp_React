@@ -6,7 +6,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { View, Button, Vibration } from 'react-native';
 import { TonConnectUI } from '@tonconnect/ui-react';
 
-const isDev = false;
+const isDev = true;
 const liveVersion = "banana-v19";
 const devVersion = "Payment2";
 
