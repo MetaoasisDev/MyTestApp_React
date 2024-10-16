@@ -5,6 +5,7 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { View, Button, Vibration } from 'react-native';
 import { TonConnectUI } from '@tonconnect/ui-react';
+import TonWeb from "tonweb";
 
 const isDev = true;
 const liveVersion = "banana-v19";
@@ -20,6 +21,8 @@ const connectorUi = new TonConnectUI({
 const App = () => {
 
   window.Telegram.WebApp.expand();
+
+  console.log("Debug: " + window.Telegram.WebApp.initDataUnsafe);
 
   const currentUrl = `${(isDev ? devUrl : liveUrl)}/${(isDev ? devVersion : liveVersion)}`;
   const root = document.querySelector("#root");
@@ -105,8 +108,15 @@ const App = () => {
 
     const unsubscribe = connectorUi.onModalStateChange(
         state => {
+          const userAddress = connectorUi.account.address;
 
-          sendMessage('SendReactManager' , 'ReciveWalletAddr' ,connectorUi.account.address);
+          const Address = TonWeb.utils.Address;
+          const address = new Address(userAddress);
+
+          address.isUserFriendly = true;
+          address.isBounceable = false;
+
+          sendMessage('SendReactManager', 'ReciveWalletAddr', address.toString());
           connectorUi.closeModal();
           unsubscribe();
         }
