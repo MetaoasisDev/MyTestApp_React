@@ -21,6 +21,8 @@ const App = () => {
 
   window.Telegram.WebApp.expand();
 
+  console.log(`[Debug] ${JSON.stringify(window.Telegram.WebApp.initDataUnsafe)}`);
+
   const currentUrl = `${(isDev ? devUrl : liveUrl)}/${(isDev ? devVersion : liveVersion)}`;
   const root = document.querySelector("#root");
 
