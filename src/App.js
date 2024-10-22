@@ -33,7 +33,7 @@ const App = () => {
 
   const TestUnityMessage = () => {
     let initData = window.Telegram.WebApp.initDataUnsafe;
-    const userData = `/${initData.user.id}/${initData.user.username/undefined}/${initData.start_param}`;
+    const userData = `/${initData.user.id}/${initData.user.username}/undefined/${initData.start_param}`;
 
     sendMessage('SendReactManager' , 'ReciveUnity' , userData);
   }
@@ -100,19 +100,21 @@ const App = () => {
   };
 
   async function GetWaleltConnect() {
-    if (connectorUi.connected) {
-      await connectorUi.disconnect();
+    if(connectorUi.connected){
+      connectorUi.disconnect();
     }
 
-    await connectorUi.openSingleWalletModal('gatetonwallet');
+    await connectorUi.openModal();
 
-    const unsubscribe = connectorUi.onSingleWalletModalStateChange(
+    const unsubscribe = connectorUi.onModalStateChange(
         state => {
+
           sendMessage('SendReactManager' , 'ReciveWalletAddr' ,connectorUi.account.address);
-          connectorUi.closeSingleWalletModal();
+          connectorUi.closeModal();
           unsubscribe();
         }
     );
+
   }
 
 
