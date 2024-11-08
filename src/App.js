@@ -145,11 +145,20 @@ const App = () => {
   };
 
   async function connectOkxWalletInEthereum() {
-    let deepLink = (await okxUi).deepLink;
-    let universalLink = (await okxUi).universalLink;
+    await okxUi.then(async (okxUi) => {
+      if (okxUi.connected()) {
+        await okxUi.disconnect().then(() => {
+          alert("연결 해제 완료");
+          realConnectOkxWalletInEthereum();
+        }).catch(error => {
+          alert("에러 발생");
+        });
+      }
+      else {
+        await realConnectOkxWalletInEthereum();
+      }
+    });
 
-    console.log(`딥링크: ${deepLink}`);
-    console.log(`유니버셜링크: ${universalLink}`);
     /*if ((await okxUi).connected()) {
       await (await okxUi).disconnect().then(() => {
         alert("연결 해제 완료");
@@ -176,6 +185,30 @@ const App = () => {
     }*/
   }
 
+  async function realConnectOkxWalletInEthereum() {
+    await okxUi.then(async (okxUi) => {
+      console.log(`[모달 열기 전] 딥링크: ${okxUi.deepLink}, 유니버셜 링크: ${okxUi.universalLink}`);
+
+      await okxUi.openModal({
+        namespaces: {
+          eip155: {
+            chains: ["eip155:1"],
+            defaultChain: "1"
+          }
+        }
+      }).then(async (session) => {
+        console.log(`[모달 연 후] 딥링크: ${okxUi.deepLink}, 유니버셜 링크: ${okxUi.universalLink}`);
+
+        await session.then(async (session) => {
+          alert("연결 완료: " + session.namespaces.eip155.accounts[0].replace('eip155:1', ''));
+        })
+      }).catch(async error => {
+        alert("오류 발생!");
+        console.log("[진짜 연결] 오류 발생");
+        console.log(error);
+      });
+    });
+  }
 
 
   async function GetWaleltConnect() {
