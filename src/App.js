@@ -148,25 +148,27 @@ const App = () => {
     if ((await okxUi).connected()) {
       await (await okxUi).disconnect().then(() => {
         alert("연결 해제 완료");
+        connectOkxWalletInEthereum();
       }).catch(error => {
         alert("연결 해제 실패");
         console.log(error);
       });
     }
-
-    await (await okxUi).openModal({
-      namespaces: {
-        eip155: {
-          chains: ["eip155:1"],
-          defaultChain: "1"
+    else {
+      await (await okxUi).openModal({
+        namespaces: {
+          eip155: {
+            chains: ["eip155:1"],
+            defaultChain: "1"
+          }
         }
-      }
-    }).then(async (session) => {
-      alert("연결 완료: " + (await session).namespaces.eip155.accounts[0].replace('eip155:1', ''))
-    }).catch(error => {
-      alert("연결 실패");
-      console.log(error);
-    });
+      }).then(async (session) => {
+        alert("연결 완료: " + (await session).namespaces.eip155.accounts[0].replace('eip155:1', ''))
+      }).catch(error => {
+        alert("연결 실패");
+        console.log(error);
+      });
+    }
   }
 
 
