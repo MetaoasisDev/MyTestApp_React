@@ -158,32 +158,10 @@ const App = () => {
       else {
         await realConnectOkxWalletInEthereum();
       }
+    }).catch(error => {
+      alert("뭔가 문제가 생김 1");
+      console.log(error);
     });
-
-    /*if ((await okxUi).connected()) {
-      await (await okxUi).disconnect().then(() => {
-        alert("연결 해제 완료");
-        connectOkxWalletInEthereum();
-      }).catch(error => {
-        alert("연결 해제 실패");
-        console.log(error);
-      });
-    }
-    else {
-      await (await okxUi).openModal({
-        namespaces: {
-          eip155: {
-            chains: ["eip155:1"],
-            defaultChain: "1"
-          }
-        }
-      }).then(async (session) => {
-        alert("연결 완료: " + (await session).namespaces.eip155.accounts[0].replace('eip155:1', ''))
-      }).catch(async error => {
-        alert("연결 실패 / 딥링크 직접 실행");
-        console.log(error);
-      });
-    }*/
   }
 
   async function realConnectOkxWalletInEthereum() {
@@ -206,6 +184,9 @@ const App = () => {
         console.log("[진짜 연결] 오류 발생");
         console.log(error);
       });
+    }).catch(error => {
+      alert("뭔가 문제가 생김 2");
+      console.log(error);
     });
   }
 
