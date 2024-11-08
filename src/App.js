@@ -121,23 +121,43 @@ const App = () => {
   };
 
   async function connectOkxWalletInEtherium() {
-    await (await okxUi).disconnect().then(async () => {
-      console.log("현재 세션: " + (await okxUi).session);
-      console.log("OKX 연결 해제됨");
-    }).catch(async (error) => {
-      console.log(error);
-    });
+    console.log("현재 세션: " + (await okxUi).session);
 
-    (await okxUi).openModal({
-      namespaces: {
-        eip155: {
-          chains: ["eip155:1"],
-          defaultChainId: "1",
+    await (await okxUi).disconnect().then(async () => {
+      console.log("[연결 끊기] OKX 연결 해제됨");
+
+      (await okxUi).openModal({
+        namespaces: {
+          eip155: {
+            chains: ["eip155:1"],
+            defaultChainId: "1",
+          }
         }
-      }
-    }).then(async (session) => {
-      console.log("오픈 모달");
-      console.log(session);
+      }).then(async (session) => {
+        console.log("[재연결하기] 오픈 모달");
+        console.log(session);
+      }).catch(async (error) => {
+        console.log("[재연결하기] 에러 발생");
+        console.log(error);
+      });
+    }).catch(async (error) => {
+      console.log("[연결 끊기] 에러 발생");
+      console.log(error);
+
+      (await okxUi).openModal({
+        namespaces: {
+          eip155: {
+            chains: ["eip155:1"],
+            defaultChainId: "1",
+          }
+        }
+      }).then(async (session) => {
+        console.log("[새로 연결하기] 오픈 모달");
+        console.log(session);
+      }).catch(async (error) => {
+        console.log("[새로 연결하기] 에러 발생");
+        console.log(error);
+      });
     });
   }
 
