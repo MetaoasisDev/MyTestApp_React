@@ -145,7 +145,8 @@ const App = () => {
   };
 
   async function connectOkxWalletInEthereum() {
-    if ((await okxUi).connected()) {
+    window.Telegram.WebApp.openLink((await okxUi).deepLink);
+    /*if ((await okxUi).connected()) {
       await (await okxUi).disconnect().then(() => {
         alert("연결 해제 완료");
         connectOkxWalletInEthereum();
@@ -167,9 +168,8 @@ const App = () => {
       }).catch(async error => {
         alert("연결 실패 / 딥링크 직접 실행");
         console.log(error);
-        window.Telegram.WebApp.openLink((await okxUi).deepLink);
       });
-    }
+    }*/
   }
 
 
