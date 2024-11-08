@@ -120,16 +120,17 @@ const App = () => {
   };
 
   async function connectOkxWalletInEtherium() {
-    await okxUi.openModal({
+    let session = await okxUi.openModal({
       namespaces: {
         eip155: {
           chains: ["eip155:1"],
           defaultChainId: "1",
         }
       }
-    }).then(async (result) => {
-      console.log(result);
     });
+
+    console.log(session);
+    (await okxUi).closeModal();
   }
 
   async function GetWaleltConnect() {
