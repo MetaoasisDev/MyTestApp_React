@@ -164,9 +164,10 @@ const App = () => {
         }
       }).then(async (session) => {
         alert("연결 완료: " + (await session).namespaces.eip155.accounts[0].replace('eip155:1', ''))
-      }).catch(error => {
-        alert("연결 실패");
+      }).catch(async error => {
+        alert("연결 실패 / 딥링크 직접 실행");
         console.log(error);
+        window.Telegram.WebApp.openLink((await okxUi).deepLink);
       });
     }
   }
