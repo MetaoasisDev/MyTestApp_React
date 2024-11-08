@@ -55,7 +55,8 @@ const App = () => {
     language: 'en_US',
     uiPreferences: {
       theme: THEME.LIGHT
-    }
+    },
+    restoreConnection: true,
   });
 
   const handleVibrate = () => {
@@ -120,7 +121,14 @@ const App = () => {
   };
 
   async function connectOkxWalletInEtherium() {
-    let session = (await okxUi).openModal({
+    await (await okxUi).disconnect().then(async () => {
+      console.log("현재 세션: " + (await okxUi).session);
+      console.log("OKX 연결 해제됨");
+    }).catch(async (error) => {
+      console.log(error);
+    });
+
+    (await okxUi).openModal({
       namespaces: {
         eip155: {
           chains: ["eip155:1"],
@@ -129,11 +137,6 @@ const App = () => {
       }
     }).then(async (session) => {
       console.log("오픈 모달");
-      console.log(session);
-    });
-
-    (await okxUi).on('session_update', () => {
-      console.log("세션 업데이트");
       console.log(session);
     });
   }
