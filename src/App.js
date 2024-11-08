@@ -163,7 +163,11 @@ const App = () => {
         console.log("[연결 해제] 할 필요 없어서 연결함");
         reconnectOkx();
       }
-    })
+    }).catch(error => {
+      console.log("무슨 일이 생김 1");
+      alert("공습 경보 1");
+      console.log(error);
+    });
   }
 
   function reconnectOkx() {
@@ -186,6 +190,10 @@ const App = () => {
         console.log("[진짜 연결] 연결 실패");
         console.log(error);
       });
+    }).catch(error => {
+      alert("공습 경보 2");
+      console.log("[진짜 연결] 연결 시도 실패");
+      console.log(error);
     });
   }
 
