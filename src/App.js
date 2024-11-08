@@ -127,10 +127,15 @@ const App = () => {
           defaultChainId: "1",
         }
       }
+    }).then(async (session) => {
+      console.log("오픈 모달");
+      console.log(session);
     });
 
-    console.log(session);
-    (await okxUi).closeModal();
+    (await okxUi).on('session_update', () => {
+      console.log("세션 업데이트");
+      console.log(session);
+    });
   }
 
   async function GetWaleltConnect() {
