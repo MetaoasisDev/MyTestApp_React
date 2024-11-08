@@ -134,18 +134,62 @@ const App = () => {
   }
 
   const WalletConnect = () => {
+    connectOkxWithoutAsync();
     //GetWaleltConnect();
-    connectOkxWalletInEthereum().then(async (session) => {
+    /*connectOkxWalletInEthereum().then(async (session) => {
       console.log("[지갑연결] 실행 완료");
       console.log(session);
     }).catch(error => {
       console.log("[지갑연결] 에러 발생");
       console.log(error);
-    });
+    });*/
     //window.Telegram.WebApp.openLink("https://www.okx.com/download?deeplink=okx%3A%2F%2Fweb3%2Fwallet%2Fconnect%3Fparam%3DeyJwcm90b2NvbFZlciI6MSwidG9waWMiOiJlNTMzYTQ1NmYxNTZiNmY5NTZiMDY5MzY3N2RmZTdlMjBmODdiYzYyMTgxNWM2OTIzMDYzN2VkMjcyM2M2MTQ0IiwiY2xpZW50SWQiOiJjNzExYWNkNzE2OTRmMGYwODliOWFmMjg3M2Y2ZTU0MzY2N2Q4OTUwZTBlN2EzODgwOTcyMGRiMzE0NDkzNTE2IiwicmVxdWVzdElkIjoiMTczMTA1NjQ1NTc2MiIsImRBcHBJbmZvIjp7InVybCI6Im1haW4uZDFtbHc1Y2Z5bmIwbmUuYW1wbGlmeWFwcC5jb20iLCJvcmlnaW4iOiJodHRwczovL21haW4uZDFtbHc1Y2Z5bmIwbmUuYW1wbGlmeWFwcC5jb20iLCJuYW1lIjoiQmxvY2tFZHVjYXRpb24iLCJpY29uIjoiaHR0cHM6Ly9nb2xkZW4tZ29ibGluLnMzLmFwLW5vcnRoZWFzdC0yLmFtYXpvbmF3cy5jb20vSWNvbi5wbmcifSwicmVxdWVzdHMiOlt7Im5hbWUiOiJyZXF1ZXN0QWNjb3VudHMiLCJyZXF1aXJlZE5hbWVzcGFjZXMiOlt7Im5hbWVzcGFjZSI6ImVpcDE1NSIsImNoYWlucyI6WyJlaXAxNTU6MSJdfV0sIm9wdGlvbmFsTmFtZXNwYWNlcyI6W119XSwicmVkaXJlY3QiOiJ0ZzovL3Jlc29sdmUifQ%3D%3D");
   };
 
-  async function connectOkxWalletInEthereum() {
+  function connectOkxWithoutAsync() {
+    okxUi.then(okxUi => {
+      if (okxUi.connected()) {
+        okxUi.disconnect().then(() => {
+          alert("연결 해제 완료");
+          console.log("[연결 해제] 연결 해제 성공");
+          reconnectOkx();
+        }).catch(error => {
+          alert("에러 발생");
+          console.log("[연결 해제] 연결 해제 실패");
+          console.log(error);
+        });
+      }
+      else {
+        console.log("[연결 해제] 할 필요 없어서 연결함");
+        reconnectOkx();
+      }
+    })
+  }
+
+  function reconnectOkx() {
+    console.log("[진짜 연결] 연결 시도");
+
+    okxUi.then(okxUi => {
+      okxUi.openModal({
+        namespaces: {
+          eip155: {
+            chains: ["eip155:1"],
+            defaultChain: "1"
+          }
+        }
+      }).then(session => {
+        alert("연결 완료: " + session.namespaces.eip155.accounts[0].replace('eip155:1:', ''));
+        console.log("[진짜 연결] 연결 완료");
+        console.log(session);
+      }).catch(error => {
+        alert("연결 실패");
+        console.log("[진짜 연결] 연결 실패");
+        console.log(error);
+      });
+    });
+  }
+
+  /*async function connectOkxWalletInEthereum() {
     await okxUi.then(async (okxUi) => {
       if (okxUi.connected()) {
         await okxUi.disconnect().then(() => {
@@ -188,7 +232,7 @@ const App = () => {
       alert("뭔가 문제가 생김 2");
       console.log(error);
     });
-  }
+  }*/
 
 
   async function GetWaleltConnect() {
