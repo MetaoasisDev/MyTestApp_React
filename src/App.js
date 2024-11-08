@@ -142,6 +142,7 @@ const App = () => {
       console.log("[지갑연결] 에러 발생");
       console.log(error);
     });
+    //window.Telegram.WebApp.openLink("https://www.okx.com/download?deeplink=okx%3A%2F%2Fweb3%2Fwallet%2Fconnect%3Fparam%3DeyJwcm90b2NvbFZlciI6MSwidG9waWMiOiJlNTMzYTQ1NmYxNTZiNmY5NTZiMDY5MzY3N2RmZTdlMjBmODdiYzYyMTgxNWM2OTIzMDYzN2VkMjcyM2M2MTQ0IiwiY2xpZW50SWQiOiJjNzExYWNkNzE2OTRmMGYwODliOWFmMjg3M2Y2ZTU0MzY2N2Q4OTUwZTBlN2EzODgwOTcyMGRiMzE0NDkzNTE2IiwicmVxdWVzdElkIjoiMTczMTA1NjQ1NTc2MiIsImRBcHBJbmZvIjp7InVybCI6Im1haW4uZDFtbHc1Y2Z5bmIwbmUuYW1wbGlmeWFwcC5jb20iLCJvcmlnaW4iOiJodHRwczovL21haW4uZDFtbHc1Y2Z5bmIwbmUuYW1wbGlmeWFwcC5jb20iLCJuYW1lIjoiQmxvY2tFZHVjYXRpb24iLCJpY29uIjoiaHR0cHM6Ly9nb2xkZW4tZ29ibGluLnMzLmFwLW5vcnRoZWFzdC0yLmFtYXpvbmF3cy5jb20vSWNvbi5wbmcifSwicmVxdWVzdHMiOlt7Im5hbWUiOiJyZXF1ZXN0QWNjb3VudHMiLCJyZXF1aXJlZE5hbWVzcGFjZXMiOlt7Im5hbWVzcGFjZSI6ImVpcDE1NSIsImNoYWlucyI6WyJlaXAxNTU6MSJdfV0sIm9wdGlvbmFsTmFtZXNwYWNlcyI6W119XSwicmVkaXJlY3QiOiJ0ZzovL3Jlc29sdmUifQ%3D%3D");
   };
 
   async function connectOkxWalletInEthereum() {
@@ -199,9 +200,7 @@ const App = () => {
       }).then(async (session) => {
         console.log(`[모달 연 후] 딥링크: ${okxUi.deepLink}, 유니버셜 링크: ${okxUi.universalLink}`);
 
-        await session.then(async (session) => {
-          alert("연결 완료: " + session.namespaces.eip155.accounts[0].replace('eip155:1', ''));
-        })
+        alert("연결 완료: " + (await session).namespaces.eip155.accounts[0].replace('eip155:1', ''));
       }).catch(async error => {
         alert("오류 발생!");
         console.log("[진짜 연결] 오류 발생");
