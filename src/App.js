@@ -145,7 +145,11 @@ const App = () => {
   };
 
   async function connectOkxWalletInEthereum() {
-    window.Telegram.WebApp.openLink((await okxUi).deepLink);
+    let deepLink = (await okxUi).deepLink;
+    let universalLink = (await okxUi).universalLink;
+
+    console.log(`딥링크: ${deepLink}`);
+    console.log(`유니버셜링크: ${universalLink}`);
     /*if ((await okxUi).connected()) {
       await (await okxUi).disconnect().then(() => {
         alert("연결 해제 완료");
