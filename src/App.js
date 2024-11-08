@@ -6,6 +6,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { View, Button, Vibration } from 'react-native';
 import { TonConnectUI } from '@tonconnect/ui-react';
 import {OKXUniversalConnectUI, THEME} from "@okxconnect/ui";
+import {OKXUniversalProvider} from "@okxconnect/universal-provider";
 
 const isDev = true;
 const liveVersion = "banana-v19";
@@ -41,6 +42,23 @@ const App = () => {
 
     sendMessage('SendReactManager' , 'ReciveUnity' , userData);
   }
+
+  const okxProvider = OKXUniversalProvider.init({
+    dappMetaData: {
+      name: "BlockEducation",
+      icon: "https://golden-goblin.s3.ap-northeast-2.amazonaws.com/Icon.png"
+    },
+    actionsConfiguration: {
+      returnStrategy: 'tg://resolve',
+      modals: 'all',
+      tmaReturnUrl: 'back'
+    },
+    language: 'en_US',
+    uiPreferences: {
+      theme: THEME.LIGHT
+    },
+    restoreConnection: true,
+  });
 
   const okxUi = OKXUniversalConnectUI.init({
     dappMetaData: {
@@ -117,49 +135,41 @@ const App = () => {
 
   const WalletConnect = () => {
     //GetWaleltConnect();
-    connectOkxWalletInEtherium();
+    connectOkxWalletInEthereum().then(async (session) => {
+      console.log("[지갑연결] 실행 완료");
+      console.log(session);
+    }).catch(error => {
+      console.log("[지갑연결] 에러 발생");
+      console.log(error);
+    });
   };
 
-  async function connectOkxWalletInEtherium() {
-    console.log("현재 세션: " + (await okxUi).session);
-
-    await (await okxUi).disconnect().then(async () => {
-      console.log("[연결 끊기] OKX 연결 해제됨");
-
-      (await okxUi).openModal({
-        namespaces: {
-          eip155: {
-            chains: ["eip155:1"],
-            defaultChainId: "1",
-          }
-        }
-      }).then(async (session) => {
-        console.log("[재연결하기] 오픈 모달");
-        console.log(session);
-      }).catch(async (error) => {
-        console.log("[재연결하기] 에러 발생");
+  async function connectOkxWalletInEthereum() {
+    if ((await okxUi).connected()) {
+      await (await okxUi).disconnect().then(() => {
+        alert("연결 해제 완료");
+      }).catch(error => {
+        alert("연결 해제 실패");
         console.log(error);
       });
-    }).catch(async (error) => {
-      console.log("[연결 끊기] 에러 발생");
+    }
+
+    await (await okxUi).openModal({
+      namespaces: {
+        eip155: {
+          chains: ["eip155:1"],
+          defaultChain: "1"
+        }
+      }
+    }).then(async (session) => {
+      alert("연결 완료: " + (await session).namespaces.eip155.accounts[0].replace('eip155:1', ''))
+    }).catch(error => {
+      alert("연결 실패");
       console.log(error);
-
-      (await okxUi).openModal({
-        namespaces: {
-          eip155: {
-            chains: ["eip155:1"],
-            defaultChainId: "1",
-          }
-        }
-      }).then(async (session) => {
-        console.log("[새로 연결하기] 오픈 모달");
-        console.log(session);
-      }).catch(async (error) => {
-        console.log("[새로 연결하기] 에러 발생");
-        console.log(error);
-      });
     });
   }
+
+
 
   async function GetWaleltConnect() {
     if(connectorUi.connected){
