@@ -5,6 +5,7 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { View, Button, Vibration } from 'react-native';
 import { TonConnectUI } from '@tonconnect/ui-react';
+import {OKXUniversalConnectUI, THEME} from "@okxconnect/ui";
 
 const isDev = true;
 const liveVersion = "banana-v19";
@@ -35,9 +36,27 @@ const App = () => {
     let initData = window.Telegram.WebApp.initDataUnsafe;
     const userData = `/${initData.user.id}/${initData.user.username}/undefined/${initData.start_param}`;
 
+    console.log(userData);
+    console.log(document.location.search);
+
     sendMessage('SendReactManager' , 'ReciveUnity' , userData);
   }
 
+  const okxUi = OKXUniversalConnectUI.init({
+    dappMetaData: {
+      name: "BlockEducation",
+      icon: "https://golden-goblin.s3.ap-northeast-2.amazonaws.com/Icon.png"
+    },
+    actionsConfiguration: {
+      returnStrategy: 'tg://resolve',
+      modals: 'all',
+      tmaReturnUrl: 'back'
+    },
+    language: 'en_US',
+    uiPreferences: {
+      theme: THEME.LIGHT
+    }
+  });
 
   const handleVibrate = () => {
     Vibration.vibrate(100);
@@ -96,8 +115,22 @@ const App = () => {
   }
 
   const WalletConnect = () => {
-    GetWaleltConnect();
+    //GetWaleltConnect();
+    connectOkxWalletInEtherium();
   };
+
+  async function connectOkxWalletInEtherium() {
+    await okxUi.openModal({
+      namespaces: {
+        eip155: {
+          chains: ["eip155:1"],
+          defaultChainId: "1",
+        }
+      }
+    }).then(async (result) => {
+      console.log(result);
+    });
+  }
 
   async function GetWaleltConnect() {
     if(connectorUi.connected){
