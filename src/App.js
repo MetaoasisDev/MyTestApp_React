@@ -21,8 +21,11 @@ const eth_mainNet_Id = "1";
 const eth_binance = "eip155:56";
 const eth_binance_Id = "56";
 
-let current_chainId = eth_binance;
-let current_chainIdNum = eth_binance_Id;
+const eth_scroll = "eip155:534352";
+const eth_scroll_Id = "534352";
+
+let current_chainId = eth_scroll;
+let current_chainIdNum = eth_scroll_Id;
 
 const tonConnectUi = new TonConnectUI({
   manifestUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json"
@@ -203,16 +206,13 @@ const App = () => {
       await provider.connect({
         namespaces: {
           eip155: {
-            chains: [eth_binance],
-            defaultChain: eth_binance_Id,
+            chains: [eth_scroll, eth_binance],
+            defaultChain: eth_scroll_Id,
           }
         },
         optionalNamespaces: {
           eip155: {
-            chains: [eth_binance],
-            rpcMap: {
-              56: "https://bsc-dataseed1.ninicoin.io"
-            }
+            chains: [eth_scroll]
           }
         },
         sessionConfig: {
