@@ -18,8 +18,8 @@ const devVersion = "Payment2";
 const eth_mainNet = "eip155:1";
 const eth_mainNet_Id = "1";
 
-const eth_binance = "eip155:38";
-const eth_binance_Id = "38";
+const eth_binance = "eip155:56";
+const eth_binance_Id = "56";
 
 let current_chainId = eth_binance;
 let current_chainIdNum = eth_binance_Id;
@@ -178,8 +178,6 @@ const App = () => {
 
   async function TryConnectOKXEthWallet() {
     await okxProvider.then(async provider => {
-      provider.setDefaultChain(current_chainId);
-
       if (provider.connected) {
         await provider.disconnect().then(async () => {
           alert("OKX Eth wallet disconnected.");
@@ -205,7 +203,7 @@ const App = () => {
           eip155: {
             chains: [eth_mainNet, eth_binance],
             rpcMap: {
-              38: "https://bsc-dataseed1.ninicoin.io"
+              56: "https://bsc-dataseed1.ninicoin.io"
             },
             defaultChain: eth_binance_Id,
           }
@@ -214,7 +212,7 @@ const App = () => {
           eip155: {
             chains: [eth_binance],
             rpcMap: {
-              38: "https://bsc-dataseed1.ninicoin.io"
+              56: "https://bsc-dataseed1.ninicoin.io"
             }
           }
         },
@@ -222,6 +220,8 @@ const App = () => {
           redirect: "tg://resolve"
         }
       }).then(async result => {
+        provider.setDefaultChain(current_chainId);
+
         const address = result.namespaces.eip155.accounts[0].replace(current_chainId + ":", "");
         alert("Successfully connected OKX Eth wallet. Address: " + address);
 
