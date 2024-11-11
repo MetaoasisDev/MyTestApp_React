@@ -45,6 +45,8 @@ const okxProvider = OKXUniversalProvider.init({
   restoreConnection: true
 });
 
+
+
 const App = () => {
   window.Telegram.WebApp.expand();
 
@@ -112,10 +114,10 @@ const App = () => {
   };
 
   const WalletConnect = () => {
-    TryConnectOKXEthWallet().then(async () => {
-      alert("Wallet connection started.");
+    AddBinanceChainData().then(async () => {
+      console.log("연결 시작");
     }).catch(error => {
-      alert("Failed to connect wallet.");
+      console.log("에러 발생");
       console.log(error);
     });
   };
@@ -171,6 +173,36 @@ const App = () => {
       sendMessage('SendReactManager', 'ReciveWalletAddr', tonConnectUi.account.address);
       tonConnectUi.closeModal();
       unsubscribe();
+    });
+  }
+
+  async function AddBinanceChainData() {
+    await okxProvider.then(async provider => {
+      await provider.request({
+        "method": "wallet_addEthereumChain",
+        "params": [{
+          "blockExplorerUrls": ["https://bscscan.com/"],
+          "chainId": "0x38",
+          "chainName": "BNB Smart Chain",
+          "nativeCurrency": {
+            "name": "BNB",
+            "symbol": "BNB",
+            "decimals": "18"
+          },
+          "rpcUrls": [
+            "https://bsc-dataseed1.ninicoin.io",
+            "https://bsc-dataseed2.ninicoin.io",
+            "https://bsc-dataseed3.ninicoin.io"
+          ]
+        }]
+      }, eth_mainNet).then(async result => {
+        await TryConnectOKXEthWallet().then(async () => {
+          alert("Wallet connection started.");
+        }).catch(error => {
+          alert("Failed to connect wallet.");
+          console.log(error);
+        });
+      });
     });
   }
 
