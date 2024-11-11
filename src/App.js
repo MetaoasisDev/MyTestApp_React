@@ -178,6 +178,8 @@ const App = () => {
 
   async function TryConnectOKXEthWallet() {
     await okxProvider.then(async provider => {
+      console.log(provider.connected);
+      
       if (provider.connected) {
         await provider.disconnect().then(async () => {
           alert("OKX Eth wallet disconnected.");
