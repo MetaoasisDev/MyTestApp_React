@@ -6,7 +6,6 @@ import { TonConnectUI } from "@tonconnect/ui-react";
 
 import { OKXUniversalProvider } from "@okxconnect/universal-provider";
 import { THEME } from "@okxconnect/ui";
-import * as tonconnect from "node/diagnostics_channel";
 
 const isDevMode = true;
 
