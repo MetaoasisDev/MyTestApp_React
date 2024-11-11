@@ -182,6 +182,7 @@ const App = () => {
       }).then(r => {
         alert("successfully connected");
         console.log(r);
+        alert(r.namespaces.eip155.accounts[0].replace('eip155:1:', ''));
       }).catch(error => {
         alert("an error occurred while connecting");
         console.log(error);
