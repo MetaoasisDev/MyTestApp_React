@@ -18,8 +18,8 @@ const devVersion = "Payment2";
 const eth_mainNet = "eip155:1";
 const eth_mainNet_Id = "1";
 
-const eth_binance = "eip155:5600";
-const eth_binance_Id = "5600";
+const eth_binance = "eip155:56";
+const eth_binance_Id = "56";
 
 let current_chainId = eth_binance;
 let current_chainIdNum = eth_binance_Id;
@@ -204,6 +204,15 @@ const App = () => {
             chains: [current_chainId],
             defaultChain: current_chainIdNum
           }
+        },
+        optionalNamespaces: {
+          eip155: {
+            chains: [eth_binance],
+            defaultChain: eth_binance_Id
+          }
+        },
+        sessionConfig: {
+          redirect: "tg://resolve"
         }
       }).then(async result => {
         const address = result.namespaces.eip155.accounts[0].replace(current_chainId + ":", "");
