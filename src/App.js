@@ -18,8 +18,8 @@ const devVersion = "Payment2";
 const eth_mainNet = "eip155:1";
 const eth_mainNet_Id = "1";
 
-const eth_binance = "eip155:56";
-const eth_binance_Id = "56";
+const eth_binance = "eip155:5600";
+const eth_binance_Id = "5600";
 
 let current_chainId = eth_binance;
 let current_chainIdNum = eth_binance_Id;
