@@ -108,7 +108,7 @@ const App = () => {
   };
 
   const WalletConnect = () => {
-    TryConnectTonConnectWallet().then(async () => {
+    TryConnectOKXEthWallet().then(async () => {
       alert("Successfully connected wallet.");
     }).catch(error => {
       alert("Failed to connect wallet.");
