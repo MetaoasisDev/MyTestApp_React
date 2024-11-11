@@ -206,7 +206,7 @@ const App = () => {
       await provider.connect({
         namespaces: {
           eip155: {
-            chains: [eth_scroll, eth_binance],
+            chains: [eth_scroll],
             defaultChain: eth_scroll_Id,
           }
         },
