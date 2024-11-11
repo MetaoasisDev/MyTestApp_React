@@ -133,21 +133,58 @@ const App = () => {
     });
   }
 
+  okxProvider.then(provider => {
+    provider.on('display_uri', uri => {
+      console.log('[Url] ' + uri.toString());
+      window.Telegram.WebApp.openLink(uri.toString());
+    });
+  });
+
+  okxProvider.then(provider => {
+    provider.on('session_update', session => {
+      alert("session has been updated.");
+      console.log(session);
+    });
+  });
+
+
+  okxProvider.then(provider => {
+    provider.on('session_delete', ({topic}) => {
+      alert("session has been deleted.");
+      console.log(topic);
+    });
+  });
+
   const WalletConnect = () => {
+    alert("connection started");
+
     okxProvider.then(provider => {
-      provider.on('display_uri', uri => {
-        console.log('[Url] ' + uri.toString());
-        window.Telegram.WebApp.openLink(uri.toString());
-      });
+      provider.setDefaultChain("eip155:1");
 
-      provider.on('session_update', session => {
-        alert("session has been updated.");
-        console.log(session);
-      });
+      if (provider.connected) {
+        alert("already connected. disconnecting");
+        provider.disconnect().then(r => {
+          alert("successfully disconnected");
+          console.log(r);
+        }).catch(error => {
+          alert("an error occurred while disconnecting");
+          console.log(error);
+        });
+      }
 
-      provider.on('session_delete', ({topic}) => {
-        alert("session has been deleted.");
-        console.log(topic);
+      provider.connect({
+        namespaces: {
+          eip155: {
+            chains: ["eip155:1"],
+            defaultChain: "1"
+          }
+        }
+      }).then(r => {
+        alert("successfully connected");
+        console.log(r);
+      }).catch(error => {
+        alert("an error occurred while connecting");
+        console.log(error);
       });
     });
     //connectOkxWithoutAsync();
