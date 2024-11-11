@@ -201,10 +201,7 @@ const App = () => {
       await provider.connect({
         namespaces: {
           eip155: {
-            chains: [eth_mainNet, eth_binance],
-            rpcMap: {
-              56: "https://bsc-dataseed1.ninicoin.io"
-            },
+            chains: [eth_binance],
             defaultChain: eth_binance_Id,
           }
         },
