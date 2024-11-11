@@ -201,8 +201,8 @@ const App = () => {
       await provider.connect({
         namespaces: {
           eip155: {
-            chains: [current_chainId],
-            defaultChain: current_chainIdNum
+            chains: [eth_binance, eth_binance],
+            defaultChain: eth_binance_Id,
           }
         },
         optionalNamespaces: {
