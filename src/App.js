@@ -1,32 +1,53 @@
-import React ,{Fragment , useEffect }from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { React, useEffect } from "react";
+import { Vibration } from "react-native";
 import { Unity, useUnityContext } from "react-unity-webgl";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import { View, Button, Vibration } from 'react-native';
-import { TonConnectUI } from '@tonconnect/ui-react';
-import {OKXUniversalConnectUI, THEME} from "@okxconnect/ui";
-import {OKXUniversalProvider} from "@okxconnect/universal-provider";
 
-const isDev = true;
-const liveVersion = "banana-v19";
-const devVersion = "Payment2";
+import { TonConnectUI } from "@tonconnect/ui-react";
+
+import { OKXUniversalProvider } from "@okxconnect/universal-provider";
+import { THEME } from "@okxconnect/ui";
+import * as tonconnect from "node/diagnostics_channel";
+
+const isDevMode = true;
 
 const liveUrl = "https://d3c9jx2zokz1rn.cloudfront.net/web-build";
 const devUrl = "https://lys-test.s3.ap-northeast-2.amazonaws.com";
 
-const connectorUi = new TonConnectUI({
-  manifestUrl: 'https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json'
+const liveVersion = "banana-v19";
+const devVersion = "Payment2";
+
+const eth_mainNet = "eip155:1";
+const eth_binance = "eip155:56";
+
+let current_chainId = eth_binance;
+
+const tonConnectUi = new TonConnectUI({
+  manifestUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json"
+});
+
+const okxProvider = OKXUniversalProvider.init({
+  dappMetaData: {
+    name: "BlockEducation",
+    icon: "https://unitybuild-blockstreet.s3.ap-northeast-2.amazonaws.com/unity-component/Image/BlockStreet_Logo.png"
+  },
+  actionsConfiguration: {
+    returnStrategy: "tg://resolve",
+    modals: "all",
+    tmaReturnUrl: "back"
+  },
+  language: "en_US",
+  uiPreferences: {
+    theme: THEME.LIGHT
+  },
+  restoreConnection: true
 });
 
 const App = () => {
-
   window.Telegram.WebApp.expand();
 
-  const currentUrl = `${(isDev ? devUrl : liveUrl)}/${(isDev ? devVersion : liveVersion)}`;
-  const root = document.querySelector("#root");
+  const currentUrl = `${(isDevMode ? devUrl : liveUrl)}/${(isDevMode ? devVersion : liveVersion)}`
 
-  const { unityProvider ,sendMessage ,addEventListener ,removeEventListener } = useUnityContext({
+  const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
     loaderUrl: `${currentUrl}/Build.loader.js`,
     dataUrl: `${currentUrl}/Build.data`,
     frameworkUrl: `${currentUrl}/Build.framework.js`,
@@ -41,41 +62,7 @@ const App = () => {
     console.log(document.location.search);
 
     sendMessage('SendReactManager' , 'ReciveUnity' , userData);
-  }
-
-  const okxProvider = OKXUniversalProvider.init({
-    dappMetaData: {
-      name: "BlockEducation",
-      icon: "https://golden-goblin.s3.ap-northeast-2.amazonaws.com/Icon.png"
-    },
-    actionsConfiguration: {
-      returnStrategy: 'tg://resolve',
-      modals: 'all',
-      tmaReturnUrl: 'back'
-    },
-    language: 'en_US',
-    uiPreferences: {
-      theme: THEME.LIGHT
-    },
-    restoreConnection: true,
-  });
-
-  const okxUi = OKXUniversalConnectUI.init({
-    dappMetaData: {
-      name: "BlockEducation",
-      icon: "https://golden-goblin.s3.ap-northeast-2.amazonaws.com/Icon.png"
-    },
-    actionsConfiguration: {
-      returnStrategy: 'tg://resolve',
-      modals: 'all',
-      tmaReturnUrl: 'back'
-    },
-    language: 'en_US',
-    uiPreferences: {
-      theme: THEME.LIGHT
-    },
-    restoreConnection: true,
-  });
+  };
 
   const handleVibrate = () => {
     Vibration.vibrate(100);
@@ -121,6 +108,33 @@ const App = () => {
     openInvoiceAndPayment(str, 7);
   };
 
+  const WalletConnect = () => {
+    TryConnectTonConnectWallet().then(async () => {
+      alert("Successfully connected wallet.");
+    }).catch(error => {
+      alert("Failed to connect wallet.");
+      console.log(error);
+    });
+  };
+
+  const handleCopyClipBoard = (text_s) => {
+    const element = document.createElement('textarea');
+
+    element.value = text_s;
+    element.setAttribute('readonly', '');
+    element.style.position = 'fixed';
+    element.style.opacity = '0';
+
+    document.body.appendChild(element);
+    element.select();
+
+    const copyValue = document.execCommand('copy');
+
+    document.body.removeChild(element);
+  };
+
+  // -- Internal functions
+
   function openInvoiceAndPayment(url, itemNum) {
     window.Telegram.WebApp.openInvoice(url, event => {
       if (event === 'cancelled' || event === 'failed') {
@@ -133,206 +147,99 @@ const App = () => {
     });
   }
 
-  okxProvider.then(provider => {
-    provider.on('display_uri', uri => {
-      console.log('[Url] ' + uri.toString());
+  async function TryConnectTonConnectWallet() {
+    if (tonConnectUi.connected) {
+      await tonConnectUi.disconnect().then(async () => {
+        await ConnectTonConnectWallet();
+      }).catch(error => {
+        alert("Failed to disconnect TonConnect wallet.");
+        console.log(error);
+      });
+    }
+    else {
+      await ConnectTonConnectWallet();
+    }
+  }
+
+  async function ConnectTonConnectWallet() {
+    await tonConnectUi.openModal();
+
+    const unsubscribe = tonConnectUi.onModalStateChange(state => {
+      sendMessage('SendReactManager', 'ReciveWalletAddr', tonConnectUi.account.address);
+      tonConnectUi.closeModal();
+      unsubscribe();
+    });
+  }
+
+  async function TryConnectOKXEthWallet() {
+    await okxProvider.then(async provider => {
+      provider.setDefaultChain(current_chainId);
+
+      if (provider.connected) {
+        await provider.disconnect().then(async () => {
+          alert("OKX Eth wallet disconnected.");
+          await ConnectOKXEthWallet();
+        }).catch(error => {
+          alert("Failed to disconnect OKX Eth wallet.");
+          console.log(error);
+        });
+      }
+      else {
+        await ConnectOKXEthWallet();
+      }
+    }).catch(error => {
+      alert("Failed to connect OKX Eth wallet. Initialize Failed");
+      console.log(error);
+    });
+  }
+
+  async function ConnectOKXEthWallet() {
+    await okxProvider.then(async provider => {
+      await provider.connect({
+        namespaces: {
+          eip155: {
+            chains: [current_chainId],
+            defaultChain: "1"
+          }
+        }
+      }).then(async result => {
+        const address = result.namespaces.eip155.accounts[0].replace(current_chainId + ":", "");
+        alert("Successfully connected OKX Eth wallet. Address: " + address);
+
+        sendMessage('SendReactManager', 'ReciveWalletAddr', address);
+      }).catch(error => {
+        alert("An error occurred while connecting OKX Eth wallet.");
+        console.log(error);
+      });
+    }).catch(error => {
+      alert("Failed to connect OKX Eth wallet. Connector initialization Failed");
+      console.log(error);
+    });
+  }
+
+  // -- OKXConnectProvider event listeners
+
+  okxProvider.then(async provider => {
+    await provider.on("display_uri", async uri => {
       window.Telegram.WebApp.openLink(uri.toString());
     });
   });
 
-  okxProvider.then(provider => {
-    provider.on('session_update', session => {
-      alert("session has been updated.");
+  okxProvider.then(async provider => {
+    await provider.on("session_update", async session => {
+      console.log("Session has been updated.");
       console.log(session);
     });
   });
 
-
-  okxProvider.then(provider => {
-    provider.on('session_delete', ({topic}) => {
-      alert("session has been deleted.");
+  okxProvider.then(async provider => {
+    await provider.on("session_delete", ({topic}) => {
+      console.log("Session has been deleted.");
       console.log(topic);
     });
   });
 
-  const WalletConnect = () => {
-    alert("connection started");
-
-    okxProvider.then(provider => {
-      provider.setDefaultChain("eip155:1");
-
-      if (provider.connected) {
-        alert("already connected. disconnecting");
-        provider.disconnect().then(r => {
-          alert("successfully disconnected");
-          console.log(r);
-        }).catch(error => {
-          alert("an error occurred while disconnecting");
-          console.log(error);
-        });
-      }
-
-      provider.connect({
-        namespaces: {
-          eip155: {
-            chains: ["eip155:1"],
-            defaultChain: "1"
-          }
-        }
-      }).then(r => {
-        alert("successfully connected");
-        console.log(r);
-        alert(r.namespaces.eip155.accounts[0].replace('eip155:1:', ''));
-      }).catch(error => {
-        alert("an error occurred while connecting");
-        console.log(error);
-      });
-    });
-    //connectOkxWithoutAsync();
-    //GetWaleltConnect();
-    /*connectOkxWalletInEthereum().then(async (session) => {
-      console.log("[지갑연결] 실행 완료");
-      console.log(session);
-    }).catch(error => {
-      console.log("[지갑연결] 에러 발생");
-      console.log(error);
-    });*/
-    //window.Telegram.WebApp.openLink("https://www.okx.com/download?deeplink=okx%3A%2F%2Fweb3%2Fwallet%2Fconnect%3Fparam%3DeyJwcm90b2NvbFZlciI6MSwidG9waWMiOiJlNTMzYTQ1NmYxNTZiNmY5NTZiMDY5MzY3N2RmZTdlMjBmODdiYzYyMTgxNWM2OTIzMDYzN2VkMjcyM2M2MTQ0IiwiY2xpZW50SWQiOiJjNzExYWNkNzE2OTRmMGYwODliOWFmMjg3M2Y2ZTU0MzY2N2Q4OTUwZTBlN2EzODgwOTcyMGRiMzE0NDkzNTE2IiwicmVxdWVzdElkIjoiMTczMTA1NjQ1NTc2MiIsImRBcHBJbmZvIjp7InVybCI6Im1haW4uZDFtbHc1Y2Z5bmIwbmUuYW1wbGlmeWFwcC5jb20iLCJvcmlnaW4iOiJodHRwczovL21haW4uZDFtbHc1Y2Z5bmIwbmUuYW1wbGlmeWFwcC5jb20iLCJuYW1lIjoiQmxvY2tFZHVjYXRpb24iLCJpY29uIjoiaHR0cHM6Ly9nb2xkZW4tZ29ibGluLnMzLmFwLW5vcnRoZWFzdC0yLmFtYXpvbmF3cy5jb20vSWNvbi5wbmcifSwicmVxdWVzdHMiOlt7Im5hbWUiOiJyZXF1ZXN0QWNjb3VudHMiLCJyZXF1aXJlZE5hbWVzcGFjZXMiOlt7Im5hbWVzcGFjZSI6ImVpcDE1NSIsImNoYWlucyI6WyJlaXAxNTU6MSJdfV0sIm9wdGlvbmFsTmFtZXNwYWNlcyI6W119XSwicmVkaXJlY3QiOiJ0ZzovL3Jlc29sdmUifQ%3D%3D");
-  };
-
-  function connectOkxWithoutAsync() {
-    okxUi.then(okxUi => {
-      if (okxUi.connected()) {
-        okxUi.disconnect().then(() => {
-          alert("연결 해제 완료");
-          console.log("[연결 해제] 연결 해제 성공");
-          reconnectOkx();
-        }).catch(error => {
-          alert("에러 발생");
-          console.log("[연결 해제] 연결 해제 실패");
-          console.log(error);
-        });
-      }
-      else {
-        console.log("[연결 해제] 할 필요 없어서 연결함");
-        reconnectOkx();
-      }
-    }).catch(error => {
-      console.log("무슨 일이 생김 1");
-      alert("공습 경보 1");
-      console.log(error);
-    });
-  }
-
-  function reconnectOkx() {
-    console.log("[진짜 연결] 연결 시도");
-
-    okxUi.then(okxUi => {
-      okxUi.openModal({
-        namespaces: {
-          eip155: {
-            chains: ["eip155:1"],
-            defaultChain: "1"
-          }
-        }
-      }).then(session => {
-        alert("연결 완료: " + session.namespaces.eip155.accounts[0].replace('eip155:1:', ''));
-        console.log("[진짜 연결] 연결 완료");
-        console.log(session);
-      }).catch(error => {
-        alert("연결 실패");
-        console.log("[진짜 연결] 연결 실패");
-        console.log(error);
-      });
-    }).catch(error => {
-      alert("공습 경보 2");
-      console.log("[진짜 연결] 연결 시도 실패");
-      console.log(error);
-    });
-  }
-
-  /*async function connectOkxWalletInEthereum() {
-    await okxUi.then(async (okxUi) => {
-      if (okxUi.connected()) {
-        await okxUi.disconnect().then(() => {
-          alert("연결 해제 완료");
-          realConnectOkxWalletInEthereum();
-        }).catch(error => {
-          alert("에러 발생");
-        });
-      }
-      else {
-        await realConnectOkxWalletInEthereum();
-      }
-    }).catch(error => {
-      alert("뭔가 문제가 생김 1");
-      console.log(error);
-    });
-  }
-
-  async function realConnectOkxWalletInEthereum() {
-    await okxUi.then(async (okxUi) => {
-      console.log(`[모달 열기 전] 딥링크: ${okxUi.deepLink}, 유니버셜 링크: ${okxUi.universalLink}`);
-
-      await okxUi.openModal({
-        namespaces: {
-          eip155: {
-            chains: ["eip155:1"],
-            defaultChain: "1"
-          }
-        }
-      }).then(async (session) => {
-        console.log(`[모달 연 후] 딥링크: ${okxUi.deepLink}, 유니버셜 링크: ${okxUi.universalLink}`);
-
-        alert("연결 완료: " + (await session).namespaces.eip155.accounts[0].replace('eip155:1', ''));
-      }).catch(async error => {
-        alert("오류 발생!");
-        console.log("[진짜 연결] 오류 발생");
-        console.log(error);
-      });
-    }).catch(error => {
-      alert("뭔가 문제가 생김 2");
-      console.log(error);
-    });
-  }*/
-
-
-  async function GetWaleltConnect() {
-    if(connectorUi.connected){
-      connectorUi.disconnect();
-    }
-
-    await connectorUi.openModal();
-
-    const unsubscribe = connectorUi.onModalStateChange(
-        state => {
-
-          sendMessage('SendReactManager' , 'ReciveWalletAddr' ,connectorUi.account.address);
-          connectorUi.closeModal();
-          unsubscribe();
-        }
-    );
-
-  }
-
-
-
-  const handleCopyClipBoard = (text_s) => {
-    //   navigator.clipboard.writeText(text_s);
-    //  document.execCommand('copy', true, text_s);
-
-    const element = document.createElement('textarea');
-    element.value = text_s;
-    element.setAttribute('readonly', '');
-    element.style.position = 'fixed';
-    element.style.opacity = '0';
-    document.body.appendChild(element);
-    element.select();
-    const copyValue = document.execCommand('copy');
-    document.body.removeChild(element);
-
-  };
-
+  // -- Unity relative functions
 
   useEffect( () => {
     addEventListener('TakeTokenFromReact',TestUnityMessage);
@@ -374,26 +281,21 @@ const App = () => {
 
   },[addEventListener,removeEventListener,TestUnityMessage,handleCopyClipBoard,OpenUrl,WalletConnect,
     Shop_Assistant,Shop_Manager,Shop_DieselTechnician,Shop_HarvestHelp,Shop_Farmer,Shop_CoinParty,
-  ])
+  ]);
 
   return (
-
       <div className="App">
-
         <Unity
-            devicePixelRatio={2}
-            style={{
-              width: window.innerWidth || document.body.clientWidth,
-              height: window.innerHeight || document.body.clientHeight ,
-              justifySelf: 'center',
-              alignSelf: 'center',
-
-            }} unityProvider={unityProvider}/>
-
+          devicePixelRatio={2}
+          style={{
+            width: window.innerWidth || document.body.clientWidth,
+            height: window.innerHeight || document.body.clientHeight ,
+            justifySelf: 'center',
+            alignSelf: 'center',
+          }}
+          unityProvider={unityProvider}/>
       </div>
-
-  ) ;
-
+  );
 };
 
-export default App; 
+export default App;
