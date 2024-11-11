@@ -18,8 +18,8 @@ const devVersion = "Payment2";
 const eth_mainNet = "eip155:1";
 const eth_mainNet_Id = "1";
 
-const eth_binance = "eip155:56";
-const eth_binance_Id = "56";
+const eth_binance = "eip155:38";
+const eth_binance_Id = "38";
 
 let current_chainId = eth_binance;
 let current_chainIdNum = eth_binance_Id;
@@ -114,10 +114,10 @@ const App = () => {
   };
 
   const WalletConnect = () => {
-    AddBinanceChainData().then(async () => {
-      console.log("연결 시작");
+    TryConnectOKXEthWallet().then(async () => {
+      alert("Wallet connection started.");
     }).catch(error => {
-      console.log("에러 발생");
+      alert("Failed to connect wallet.");
       console.log(error);
     });
   };
@@ -176,36 +176,6 @@ const App = () => {
     });
   }
 
-  async function AddBinanceChainData() {
-    await okxProvider.then(async provider => {
-      await provider.request({
-        "method": "wallet_addEthereumChain",
-        "params": [{
-          "blockExplorerUrls": ["https://bscscan.com/"],
-          "chainId": "0x38",
-          "chainName": "BNB Smart Chain",
-          "nativeCurrency": {
-            "name": "BNB",
-            "symbol": "BNB",
-            "decimals": "18"
-          },
-          "rpcUrls": [
-            "https://bsc-dataseed1.ninicoin.io",
-            "https://bsc-dataseed2.ninicoin.io",
-            "https://bsc-dataseed3.ninicoin.io"
-          ]
-        }]
-      }, eth_mainNet).then(async result => {
-        await TryConnectOKXEthWallet().then(async () => {
-          alert("Wallet connection started.");
-        }).catch(error => {
-          alert("Failed to connect wallet.");
-          console.log(error);
-        });
-      });
-    });
-  }
-
   async function TryConnectOKXEthWallet() {
     await okxProvider.then(async provider => {
       provider.setDefaultChain(current_chainId);
@@ -233,9 +203,9 @@ const App = () => {
       await provider.connect({
         namespaces: {
           eip155: {
-            chains: [eth_binance, eth_binance],
+            chains: [eth_mainNet, eth_binance],
             rpcMap: {
-              56: "https://bsc-dataseed1.ninicoin.io"
+              38: "https://bsc-dataseed1.ninicoin.io"
             },
             defaultChain: eth_binance_Id,
           }
@@ -244,7 +214,7 @@ const App = () => {
           eip155: {
             chains: [eth_binance],
             rpcMap: {
-              56: "https://bsc-dataseed1.ninicoin.io"
+              38: "https://bsc-dataseed1.ninicoin.io"
             }
           }
         },
