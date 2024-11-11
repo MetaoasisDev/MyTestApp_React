@@ -16,9 +16,13 @@ const liveVersion = "banana-v19";
 const devVersion = "Payment2";
 
 const eth_mainNet = "eip155:1";
+const eth_mainNet_Id = "1";
+
 const eth_binance = "eip155:56";
+const eth_binance_Id = "56";
 
 let current_chainId = eth_binance;
+let current_chainIdNum = eth_binance_Id;
 
 const tonConnectUi = new TonConnectUI({
   manifestUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json"
@@ -109,7 +113,7 @@ const App = () => {
 
   const WalletConnect = () => {
     TryConnectOKXEthWallet().then(async () => {
-      alert("Successfully connected wallet.");
+      alert("Wallet connection started.");
     }).catch(error => {
       alert("Failed to connect wallet.");
       console.log(error);
@@ -198,7 +202,7 @@ const App = () => {
         namespaces: {
           eip155: {
             chains: [current_chainId],
-            defaultChain: "1"
+            defaultChain: current_chainIdNum
           }
         }
       }).then(async result => {
