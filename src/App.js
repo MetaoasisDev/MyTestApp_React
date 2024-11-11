@@ -202,13 +202,18 @@ const App = () => {
         namespaces: {
           eip155: {
             chains: [eth_binance, eth_binance],
+            rpcMap: {
+              56: "https://bsc-dataseed1.ninicoin.io"
+            },
             defaultChain: eth_binance_Id,
           }
         },
         optionalNamespaces: {
           eip155: {
             chains: [eth_binance],
-            defaultChain: eth_binance_Id
+            rpcMap: {
+              56: "https://bsc-dataseed1.ninicoin.io"
+            }
           }
         },
         sessionConfig: {
