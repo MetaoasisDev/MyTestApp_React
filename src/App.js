@@ -134,7 +134,23 @@ const App = () => {
   }
 
   const WalletConnect = () => {
-    connectOkxWithoutAsync();
+    okxProvider.then(provider => {
+      provider.on('display_uri', uri => {
+        console.log('[Url] ' + uri.toString());
+        window.Telegram.WebApp.openLink(uri.toString());
+      });
+
+      provider.on('session_update', session => {
+        alert("session has been updated.");
+        console.log(session);
+      });
+
+      provider.on('session_delete', ({topic}) => {
+        alert("session has been deleted.");
+        console.log(topic);
+      });
+    });
+    //connectOkxWithoutAsync();
     //GetWaleltConnect();
     /*connectOkxWalletInEthereum().then(async (session) => {
       console.log("[지갑연결] 실행 완료");
