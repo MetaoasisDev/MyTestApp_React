@@ -13,7 +13,7 @@ const liveUrl = "https://d3c9jx2zokz1rn.cloudfront.net/web-build";
 const devUrl = "https://lys-test.s3.ap-northeast-2.amazonaws.com";
 
 const liveVersion = "banana-v19";
-const devVersion = "ClipboardTest2";
+const devVersion = "ClipboardTest3";
 
 const eth_mainNet = "eip155:1";
 const eth_mainNet_Id = "1";
@@ -77,7 +77,12 @@ const App = () => {
   };
 
   const OpenUrl = () => {
-    window.Telegram.WebApp.openLink("https://x.com/MetaOasisVR");
+    const pasted = prompt("Input:");
+
+    if (pasted !== null) {
+      sendMessage('SendReactManager', 'TestMethod', pasted);
+    }
+    //window.Telegram.WebApp.openLink("https://x.com/MetaOasisVR");
   };
   const OpenUrl2 = () => {
     window.Telegram.WebApp.openLink("https://x.com/Dicaprio_Eth");
@@ -93,12 +98,7 @@ const App = () => {
   };
 
   const Shop_CoinParty =(str)=>{
-    const pasted = prompt("Input:");
-
-    if (pasted !== null) {
-      sendMessage('SendReactManager', 'TestMethod', pasted);
-    }
-    //openInvoiceAndPayment(str, 2);
+    openInvoiceAndPayment(str, 2);
   };
 
   const Shop_Assistant = (str) =>{
