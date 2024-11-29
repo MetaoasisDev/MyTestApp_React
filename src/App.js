@@ -93,7 +93,12 @@ const App = () => {
   };
 
   const Shop_CoinParty =(str)=>{
-    openInvoiceAndPayment(str, 2);
+    const pasted = prompt("Input:");
+
+    if (pasted !== null) {
+      sendMessage('SendReactManager', 'TestMethod', pasted);
+    }
+    //openInvoiceAndPayment(str, 2);
   };
 
   const Shop_Assistant = (str) =>{
