@@ -13,7 +13,7 @@ const liveUrl = "https://d3c9jx2zokz1rn.cloudfront.net/web-build";
 const devUrl = "https://lys-test.s3.ap-northeast-2.amazonaws.com";
 
 const liveVersion = "banana-v19";
-const devVersion = "ClipbardTest1";
+const devVersion = "ClipboardTest1";
 
 const eth_mainNet = "eip155:1";
 const eth_mainNet_Id = "1";
