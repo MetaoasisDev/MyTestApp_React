@@ -128,6 +128,8 @@ const App = () => {
   };
 
   const WalletConnect = () => {
+    console.log("[월렛커넥트] 실행됨");
+
     try {
       const [store, actions] = createWeb3ReactStoreAndActions();
 
@@ -143,15 +145,47 @@ const App = () => {
         }
       });
 
+      console.log("[월렛커넥트] 커넥터 초기화됨");
+
       connector.activate().then(async () => {
-        alert("Wallet connection started.");
+        console.log("[월렛커넥트] 활성화됨");
+
+        connector.provider.connect({
+          chainId: 56,
+          rpcMap: {
+            56: "https://bsc-dataseed.binance.org/",
+          }
+        }).then(async () => {
+          console.log("[월렛커넥트] 지갑 연결 실행");
+        }).catch(error => {
+          console.log("[월렛커넥트] 지갑 연결 실행 실패");
+          console.log(error);
+        });
       }).catch(error => {
-        alert("Failed to connect wallet.");
-        console.log(error);
+        console.log("[월렛커넥트] 활성화 실패");
       });
+
+      /*connector.deactivate(56).then(async () => {
+        console.log("[월렛커넥트] 비활성화됨");
+
+        connector.activate(56).then(async () => {
+          alert("Wallet connection started.");
+
+          console.log("[월렛커넥트] 활성화됨");
+        }).catch(error => {
+          alert("Failed to connect wallet.");
+
+          console.log("[월렛커넥트] 활성화 실패");
+          console.log(error);
+        });
+      }).catch(error => {
+        console.log("[월렛커넥트] 비활성화 실패");
+        console.log(error);
+      });*/
     }
     catch (error) {
-      console.log("[에러 발생] " + error);
+      console.log("[월렛커넥트] 에러 발생");
+      console.log(error);
     }
 
     /*TryConnectOKXEthWallet().then(async () => {
