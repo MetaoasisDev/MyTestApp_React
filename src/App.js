@@ -7,6 +7,10 @@ import { TonConnectUI } from "@tonconnect/ui-react";
 import { OKXUniversalProvider } from "@okxconnect/universal-provider";
 import { THEME } from "@okxconnect/ui";
 
+import { Actions } from "@web3-react/types";
+import { createWeb3ReactStoreAndActions } from "@web3-react/store";
+import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2";
+
 const isDevMode = true;
 
 const liveUrl = "https://d3c9jx2zokz1rn.cloudfront.net/web-build";
@@ -26,6 +30,7 @@ const eth_scroll_Id = "534352";
 
 let current_chainId = eth_scroll;
 let current_chainIdNum = eth_scroll_Id;
+
 
 const tonConnectUi = new TonConnectUI({
   manifestUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json"
@@ -63,6 +68,7 @@ const App = () => {
   });
 
   const TestUnityMessage = () => {
+    //const userData = "/5876530353/stageroad0820/undefined/undefined";
     let initData = window.Telegram.WebApp.initDataUnsafe;
     const userData = `/${initData.user.id}/${initData.user.username}/undefined/${initData.start_param}`;
 
@@ -122,12 +128,30 @@ const App = () => {
   };
 
   const WalletConnect = () => {
-    TryConnectOKXEthWallet().then(async () => {
+    const connector = new WalletConnectV2({
+      actions: createWeb3ReactStoreAndActions().map(),
+      options: {
+        projectId: "05a14d67cbff2c691b13fd57e562e616",
+        chains: [56],
+        rpcMap: {
+          [56]: "https://bsc-dataseed.binance.org/",
+        },
+        showQRCode: true,
+      }
+    });
+
+    connector.activate().then(async () => {
       alert("Wallet connection started.");
     }).catch(error => {
       alert("Failed to connect wallet.");
       console.log(error);
     });
+    /*TryConnectOKXEthWallet().then(async () => {
+      alert("Wallet connection started.");
+    }).catch(error => {
+      alert("Failed to connect wallet.");
+      console.log(error);
+    });*/
   };
 
   const handleCopyClipBoard = (text_s) => {
