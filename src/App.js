@@ -68,12 +68,12 @@ const App = () => {
   });
 
   const TestUnityMessage = () => {
-    //const userData = "/5876530353/stageroad0820/undefined/undefined";
-    let initData = window.Telegram.WebApp.initDataUnsafe;
+    const userData = "/5876530353/stageroad0820/undefined/undefined";
+    /*let initData = window.Telegram.WebApp.initDataUnsafe;
     const userData = `/${initData.user.id}/${initData.user.username}/undefined/${initData.start_param}`;
 
     console.log(userData);
-    console.log(document.location.search);
+    console.log(document.location.search);*/
 
     sendMessage('SendReactManager' , 'ReciveUnity' , userData);
   };
@@ -128,24 +128,32 @@ const App = () => {
   };
 
   const WalletConnect = () => {
-    const connector = new WalletConnectV2({
-      actions: createWeb3ReactStoreAndActions().map(),
-      options: {
-        projectId: "05a14d67cbff2c691b13fd57e562e616",
-        chains: [56],
-        rpcMap: {
-          [56]: "https://bsc-dataseed.binance.org/",
-        },
-        showQRCode: true,
-      }
-    });
+    try {
+      const [store, actions] = createWeb3ReactStoreAndActions();
 
-    connector.activate().then(async () => {
-      alert("Wallet connection started.");
-    }).catch(error => {
-      alert("Failed to connect wallet.");
-      console.log(error);
-    });
+      let connector = new WalletConnectV2({
+        actions: actions,
+        options: {
+          projectId: "05a14d67cbff2c691b13fd57e562e616",
+          chains: [56],
+          rpcMap: {
+            [56]: "https://bsc-dataseed.binance.org/",
+          },
+          showQRCode: true,
+        }
+      });
+
+      connector.activate().then(async () => {
+        alert("Wallet connection started.");
+      }).catch(error => {
+        alert("Failed to connect wallet.");
+        console.log(error);
+      });
+    }
+    catch (error) {
+      console.log("[에러 발생] " + error);
+    }
+
     /*TryConnectOKXEthWallet().then(async () => {
       alert("Wallet connection started.");
     }).catch(error => {
