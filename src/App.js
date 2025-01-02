@@ -194,7 +194,7 @@ const App = () => {
           const session = ethProvider.session;
 
           if (session.peer.metadata.name === "Binance Wallet") {
-            console.log(accounts);
+            alert(accounts[0]);
           }
           else {
             await ethProvider.disconnect().then(async () => {
