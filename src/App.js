@@ -30,7 +30,7 @@ let current_chainId = eth_scroll;
 let current_chainIdNum = eth_scroll_Id;
 
 const ethProvider = await EthereumProvider.init({
-  projectId: "3ae4dfefdb2ff7a63226eb8f1b2c8e99",
+  projectId: "018a8aad1bff63accb0cb68533c5544d",
   metadata: {
     name: "META OASIS Banana",
     url: "https://btest.official-meoasis.com",
