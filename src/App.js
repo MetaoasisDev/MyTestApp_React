@@ -7,6 +7,8 @@ import { TonConnectUI } from "@tonconnect/ui-react";
 import { OKXUniversalProvider } from "@okxconnect/universal-provider";
 import { THEME } from "@okxconnect/ui";
 
+import { EthereumProvider } from "@walletconnect/ethereum-provider";
+
 const isDevMode = true;
 
 const liveUrl = "https://d3c9jx2zokz1rn.cloudfront.net/web-build";
@@ -26,6 +28,26 @@ const eth_scroll_Id = "534352";
 
 let current_chainId = eth_scroll;
 let current_chainIdNum = eth_scroll_Id;
+
+const ethProvider = await EthereumProvider.init({
+  projectId: "3ae4dfefdb2ff7a63226eb8f1b2c8e99",
+  metadata: {
+    name: "META OASIS Banana",
+    url: "https://btest.official-meoasis.com",
+    description: "Banana clicker game on Telegram Web App",
+    icons: ['']
+  },
+  showQrModal: true,
+  qrModalOptions: {
+    explorerRecommendedWalletIds: [
+      "8a0ee50d1f22f6651afcae7eb4253e52a3310b90af5daef78a8c4929a9bb99d4",
+    ],
+    explorerExcludedWalletIds: "ALL"
+  },
+  chains: [
+    eth_mainNet_Id
+  ]
+});
 
 const tonConnectUi = new TonConnectUI({
   manifestUrl: "https://lys-test.s3.ap-northeast-2.amazonaws.com/tonconnect-manifest.json"
@@ -122,12 +144,17 @@ const App = () => {
   };
 
   const WalletConnect = () => {
-    TryConnectOKXEthWallet().then(async () => {
+    /*TryConnectOKXEthWallet().then(async () => {
       alert("Wallet connection started.");
     }).catch(error => {
       alert("Failed to connect wallet.");
       console.log(error);
-    });
+    });*/
+    TryConnectBinanceEthWallet().then(async () => {
+      console.log("Start");
+    }).catch(error => {
+      console.log(error);
+    })
   };
 
   const handleCopyClipBoard = (text_s) => {
@@ -157,6 +184,33 @@ const App = () => {
       if (event === 'paid') {
         sendMessage('SendReactManager', 'ReciveShopItem', itemNum);
       }
+    });
+  }
+
+  async function TryConnectBinanceEthWallet() {
+    await ethProvider.disconnect().then(async () => {
+      await ethProvider.connect().then(async () => {
+        await ethProvider.enable().then(async accounts => {
+          const session = ethProvider.session;
+
+          if (session.peer.metadata.name === "Binance Wallet") {
+            console.log(accounts);
+          }
+          else {
+            await ethProvider.disconnect().then(async () => {
+              alert("You must be connect wallet only using Binance Web3 Wallet.");
+            }).catch(error => {
+              console.error(error);
+            });
+          }
+        }).catch(error => {
+          console.error(error);
+        });
+      }).catch(error => {
+        console.error(error);
+      });
+    }).catch(error => {
+      console.error(error);
     });
   }
 
