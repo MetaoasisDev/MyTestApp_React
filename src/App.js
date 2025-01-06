@@ -91,6 +91,8 @@ const App = () => {
     console.log(userData);
     console.log(document.location.search);
 
+    console.log(initData.user.photo_url);
+
     sendMessage('SendReactManager' , 'ReciveUnity' , userData);
   };
 
